@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+
+  shop-app:
+    container_name: shop-app
+    restart: always
+    build: ./shop-app
+    #    volumes:
+    #      - ./shop-app:/usr/src/shop-app
+    ports:
+      - 4100:4100
+    links:
+      - shop-favorites
+      - shop-search
+
+  shop-search:
+    container_name: shop-search
+    restart: always
+    build: ./shop-search
+    #    volumes:
+    #      - ./shop-search:/usr/src/shop-search
+    ports:
+      - 4101:4101
+
+  shop-favorites:
+    container_name: shop-favorites
+    restart: always
+    build: ./shop-favorites
+    #    volumes:
+    #      - ./shop-favorites:/usr/src/shop-favorites
+    ports:
+      - 4102:4102
+    links:
+      - mongo
+
+  test-web:
+    container_name: test-web
+    restart: always
+    build: ./test-web
+    #    volumes:
+    #      - ./shop-web:/usr/src/shop-web
+    ports:
+      - 4200:4200
+    links:
+      - shop-app
